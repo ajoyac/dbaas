@@ -1,0 +1,28 @@
+lenguage: go
+sudo: false
+
+go:
+  - 1.10.x
+
+install: true
+
+services:
+  - docker
+  
+before_install:
+- docker pull mariadb
+- docker pull mysql
+- docker pull everlosa/mongo
+- docker run --name dbaas_mongo -p 27017:27017  -d everlosa/mongo:latest
+
+
+
+before_script:
+  - go get github.com/gorilla/mux
+  - go get github.com/EverLoSa/dbaas/model
+  - go get github.com/globalsign/mgo/bson
+  - go get gopkg.in/mgo.v2
+  - go vet ./...
+
+script:  
+  - go test -v -race ./...
